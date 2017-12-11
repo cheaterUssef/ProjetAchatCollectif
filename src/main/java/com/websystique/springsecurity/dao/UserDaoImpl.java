@@ -9,6 +9,10 @@ import com.websystique.springsecurity.model.User;
 @Repository("userDao")
 public class UserDaoImpl extends AbstractDao<Integer, User> implements UserDao {
  
+    public void save(User user) {
+        persist(user);
+    }
+     
     public User findById(int id) {
         return getByKey(id);
     }
@@ -19,5 +23,4 @@ public class UserDaoImpl extends AbstractDao<Integer, User> implements UserDao {
         return (User) crit.uniqueResult();
     }
  
-     
 }
