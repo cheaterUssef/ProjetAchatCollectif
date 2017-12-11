@@ -11,8 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
  
 public abstract class AbstractDao<PK extends Serializable, T> {
      
-    private final Class<T> persistentClass;
-     
+	private final Class<T> persistentClass;
+    
     @SuppressWarnings("unchecked")
     public AbstractDao(){
         this.persistentClass =(Class<T>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[1];
@@ -34,6 +34,10 @@ public abstract class AbstractDao<PK extends Serializable, T> {
         getSession().persist(entity);
     }
  
+    public void update(T entity) {
+        getSession().update(entity);
+    }
+ 
     public void delete(T entity) {
         getSession().delete(entity);
     }
@@ -41,6 +45,4 @@ public abstract class AbstractDao<PK extends Serializable, T> {
     protected Criteria createEntityCriteria(){
         return getSession().createCriteria(persistentClass);
     }
- 
-     
 }

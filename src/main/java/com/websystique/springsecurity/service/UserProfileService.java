@@ -6,9 +6,9 @@ import com.websystique.springsecurity.model.UserProfile;
  
 public interface UserProfileService {
  
-    List<UserProfile> findAll();
-     
+	UserProfile findById(int id);
+	 
     UserProfile findByType(String type);
      
-    UserProfile findById(int id);
+    List<UserProfile> findAll();
 }
