@@ -1,0 +1,5 @@
+com\websystique\springsecurity\configuration\HelloWorldConfiguration.class
+com\websystique\springsecurity\configuration\SpringMvcInitializer.class
+com\websystique\springsecurity\configuration\SecurityConfiguration.class
+com\websystique\springsecurity\configuration\SecurityWebApplicationInitializer.class
+com\websystique\springsecurity\controller\HelloWorldController.class
