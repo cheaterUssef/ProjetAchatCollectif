@@ -1,65 +1,38 @@
 package com.websystique.springsecurity.model;
  
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.validator.constraints.NotEmpty;
  
 @Entity
-@Table(name="USER_PROFILE")
-public class UserProfile implements Serializable{
+@Table(name="SUJET_TYPE")
+public class SujetType implements Serializable{
  
     @Id @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer id; 
  
     @Column(name="TYPE", length=15, unique=true, nullable=false)
-    private String type = UserProfileType.USER.getUserProfileType();
+    private String type;
     
 //    @NotEmpty
-//    @ManyToMany(mappedBy="userProfiles", fetch = FetchType.EAGER)
-//    private Set<User> users = new HashSet<User>();
-
-//    private List<User> users = new ArrayList<User>();
+//    @OneToMany(mappedBy="sujet_type")
+//    private List<Sujet> sujets = new ArrayList<Sujet>();
      
-//    public List<User> getUsers() {
-//		return users;
-//	}
-//
-//	public void setUsers(List<User> users) {
-//		this.users = users;
-//	}
-
-//	public Set<User> getUsers() {
-//		return users;
-//	}
-//
-//	public void setUsers(Set<User> users) {
-//		this.users = users;
-//	}
-
-	public Integer getId() {
+    public Integer getId() {
         return id;
     }
  
-//    public Set<User> getUserProfiles() {
-//		return userProfiles;
-//	}
-//
-//	public void setUserProfiles(Set<User> userProfiles) {
-//		this.userProfiles = userProfiles;
-//	}
-
-	public void setId(Integer id) {
+    public void setId(Integer id) {
         this.id = id;
     }
  
@@ -71,7 +44,16 @@ public class UserProfile implements Serializable{
         this.type = type;
     }
  
-    @Override
+    
+//    public List<Sujet> getSujets() {
+//		return sujets;
+//	}
+//
+//	public void setSujets(List<Sujet> sujets) {
+//		this.sujets = sujets;
+//	}
+
+	@Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
@@ -88,7 +70,7 @@ public class UserProfile implements Serializable{
             return false;
         if (!(obj instanceof UserProfile))
             return false;
-        UserProfile other = (UserProfile) obj;
+        SujetType other = (SujetType) obj;
         if (id == null) {
             if (other.id != null)
                 return false;
@@ -101,25 +83,9 @@ public class UserProfile implements Serializable{
             return false;
         return true;
     }
-
-	@Override
-	public String toString() {
-		return "UserProfile [id=" + id + ", type=" + type + "]";
-	}
-
-//	@Override
-//	public String toString() {
-//		return "UserProfile [id=" + id + ", type=" + type + ", users=" + users + "]";
-//	}
-
-    
-//	@Override
-//	public String toString() {
-//		return "UserProfile [id=" + id + ", type=" + type + ", users=" + users + "]";
-//	}
-    
-//	@Override
-//	public String toString() {
-//		return "UserProfile [id=" + id + ", type=" + type + ", userProfiles=" + userProfiles + "]";
-//	}
+ 
+    @Override
+    public String toString() {
+        return "UserProfile [id=" + id + ", type=" + type + "]";
+    }
 }

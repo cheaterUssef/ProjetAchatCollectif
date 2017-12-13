@@ -23,6 +23,9 @@ public class HelloWorldConfiguration extends WebMvcConfigurerAdapter {
     @Autowired
     RoleToUserProfileConverter roleToUserProfileConverter;
     
+    @Autowired
+    TypeToSujetTypeConverter typeToSujetTypeConverter;
+    
     @Override
     public void configureViewResolvers(ViewResolverRegistry registry) {
         InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
@@ -48,6 +51,7 @@ public class HelloWorldConfiguration extends WebMvcConfigurerAdapter {
     @Override
     public void addFormatters(FormatterRegistry registry) {
         registry.addConverter(roleToUserProfileConverter);
+        registry.addConverter(typeToSujetTypeConverter);
     }
     
     /**

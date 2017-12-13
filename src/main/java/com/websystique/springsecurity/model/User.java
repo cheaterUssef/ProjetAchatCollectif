@@ -1,7 +1,9 @@
 package com.websystique.springsecurity.model;
  
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -13,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.validator.constraints.NotEmpty;
@@ -44,12 +47,19 @@ public class User implements Serializable{
     @Column(name="EMAIL", nullable=false)
     private String email;
  
+//    @NotEmpty
+//    @ManyToMany(fetch = FetchType.EAGER)
+//    @JoinTable(name = "APP_USER_USER_PROFILE", 
+//             joinColumns = { @JoinColumn(name = "USER_ID") },
+//             inverseJoinColumns = { @JoinColumn(name = "userProfiles_id") })
+//    private Set<UserProfile> userProfiles = new HashSet<UserProfile>();
+    
     @NotEmpty
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "APP_USER_USER_PROFILE", 
-             joinColumns = { @JoinColumn(name = "USER_ID") }, 
-             inverseJoinColumns = { @JoinColumn(name = "USER_PROFILE_ID") })
     private Set<UserProfile> userProfiles = new HashSet<UserProfile>();
+    
+    @OneToMany(mappedBy="user")
+    private List<Sujet> sujets = new ArrayList<Sujet>();
  
     public Integer getId() {
         return id;
@@ -99,15 +109,31 @@ public class User implements Serializable{
         this.email = email;
     }
  
-    public Set<UserProfile> getUserProfiles() {
-        return userProfiles;
-    }
- 
-    public void setUserProfiles(Set<UserProfile> userProfiles) {
-        this.userProfiles = userProfiles;
-    }
- 
-    @Override
+//    public Set<UserProfile> getUserProfiles() {
+//        return userProfiles;
+//    }
+// 
+//    public void setUserProfiles(Set<UserProfile> userProfiles) {
+//        this.userProfiles = userProfiles;
+//    }
+
+	public Set<UserProfile> getUserProfiles() {
+		return userProfiles;
+	}
+
+	public void setUserProfiles(Set<UserProfile> userProfiles) {
+		this.userProfiles = userProfiles;
+	}
+
+	public void setSujets(List<Sujet> sujets) {
+		this.sujets = sujets;
+	}
+	
+	public List<Sujet> getSujets() {
+		return sujets;
+	}
+
+	@Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
@@ -137,18 +163,23 @@ public class User implements Serializable{
             return false;
         return true;
     }
- 
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", ssoId=" + ssoId + ", password=" + password + ", firstName=" + firstName
+				+ ", lastName=" + lastName + ", email=" + email + ", userProfiles=" + userProfiles + "]";
+	}
+
+
     /*
      * DO-NOT-INCLUDE passwords in toString function.
      * It is done here just for convenience purpose.
      */
-    @Override
-    public String toString() {
-        return "User [id=" + id + ", ssoId=" + ssoId + ", password=" + password
-                + ", firstName=" + firstName + ", lastName=" + lastName
-                + ", email=" + email + "]";
-    }
- 
- 
-     
+//	@Override
+//	public String toString() {
+//		return "User [id=" + id + ", ssoId=" + ssoId + ", firstName=" + firstName + ", lastName=" + lastName
+//				+ ", email=" + email + ", userProfiles=" + userProfiles + ", sujets=" + sujets + "]";
+//	}
+    
+    
 }

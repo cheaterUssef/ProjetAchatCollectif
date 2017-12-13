@@ -156,6 +156,7 @@ public class HelloWorldController {
  
     /**
      * This method will provide UserProfile list to views
+     * it's called before any method, so the database should be full before starting server
      */
     @ModelAttribute("roles")
     public List<UserProfile> initializeProfiles() {
