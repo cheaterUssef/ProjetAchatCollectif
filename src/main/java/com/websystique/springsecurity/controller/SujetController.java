@@ -22,9 +22,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.websystique.springsecurity.configuration.TypeToSujetTypeConverter;
+import com.websystique.springsecurity.model.Commentaire;
 import com.websystique.springsecurity.model.Sujet;
 import com.websystique.springsecurity.model.SujetType;
-import com.websystique.springsecurity.model.User;
 import com.websystique.springsecurity.service.SujetService;
 import com.websystique.springsecurity.service.SujetTypeService;
 import com.websystique.springsecurity.service.UserService;
@@ -55,9 +55,10 @@ public class SujetController {
 	@RequestMapping(value = { "/{sujet_id}/show" }, method = RequestMethod.GET)
     public String showSujet(ModelMap model, @PathVariable Integer sujet_id) {
 
- 
         Sujet sujet = sujetService.findById(sujet_id);
- 
+        Commentaire commentaire = new Commentaire();
+        model.addAttribute("commentaire", commentaire);
+        
         model.addAttribute("sujet", sujet);
         model.addAttribute("comments", sujet.getCommentaires());
         
