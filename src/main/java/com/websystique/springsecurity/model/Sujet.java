@@ -12,12 +12,12 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 @Table(name="SUJET")
@@ -26,11 +26,11 @@ public class Sujet implements Serializable {
 	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer id;
 	
-	@NotNull
+	@NotEmpty
 	@Column(name="name", length=30, nullable=false)
 	private String name;
 	
-	@NotNull
+	@NotEmpty
 	@Column(name="description", length=300, nullable=false)
 	private String description;
 
@@ -67,7 +67,7 @@ public class Sujet implements Serializable {
 //	private Boolean isVisible;
 	
 //	@NotEmpty
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	private SujetType sujet_type;
     
 //    @NotEmpty
@@ -80,6 +80,9 @@ public class Sujet implements Serializable {
 	
 	@Column(name="date_creation", nullable=false)
 	private Date date_creation;
+	
+	@OneToMany(mappedBy="sujet", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private Set<Commentaire> Commentaires = new HashSet<Commentaire>();
 
 	public Date getDate_creation() {
 		return date_creation;
@@ -87,6 +90,14 @@ public class Sujet implements Serializable {
 
 	public void setDate_creation(Date date_creation) {
 		this.date_creation = date_creation;
+	}
+	
+	public Set<Commentaire> getCommentaires() {
+		return Commentaires;
+	}
+
+	public void setCommentaires(Set<Commentaire> commentaires) {
+		Commentaires = commentaires;
 	}
 
 	public Integer getId() {

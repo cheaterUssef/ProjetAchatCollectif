@@ -6,7 +6,7 @@ import com.websystique.springsecurity.model.Sujet;
 
 public interface SujetService {
 	
-//	User findById(int id);
+	Sujet findById(int id);
     
 //  User findBySSO(String sso);
    

@@ -6,7 +6,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-    <title>Sujets List</title>
+    <title>Sujet Show</title>
     <link href="<c:url value='/static/css/bootstrap.css' />" rel="stylesheet"></link>
     <link href="<c:url value='/static/css/app.css' />" rel="stylesheet"></link>
 </head>
@@ -29,8 +29,7 @@
                         <th>type</th>
                         <th>taux_reduction</th>
                         <th>prix_diminue</th>
-                        <th>date création</th>
-                        <th>show details</th>                
+                        <th>date création</th>                        
                     </tr>
                 </thead>
                 <tbody>
@@ -47,12 +46,35 @@
                         <td>${sujet.taux_reduction}</td>
                         <td>${sujet.prix_diminue}</td>
                         <td>${sujet.date_creation}</td>
-                        <td><a href="<c:url value='/sujet/${sujet.id}/show' />">show details</a></td>
                     </tr>
                 </c:forEach>
                 </tbody>
             </table>
+            
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>contenu</th>
+                        <th>date creation</th>
+                        <th>sujet id</th>
+                        <th>user id</th>                       
+                    </tr>
+                </thead>
+                <tbody>
+                <c:forEach items="${comments}" var="comment">
+                    <tr>
+                        <td>${comment.contenu}</td>
+                        <td>${comment.date_creation}</td>
+                        <td>${comment.sujet.name}</td>
+                        <td>${comment.user.firstName}</td>
+                    </tr>
+                </c:forEach>
+                </tbody>
+             </table>
         </div>
+        
+        
+            
     </div>
 </body>
 </html>

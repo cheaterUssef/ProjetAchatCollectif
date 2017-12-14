@@ -3,12 +3,14 @@ package com.websystique.springsecurity.dao;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.Hibernate;
 import org.hibernate.criterion.Order;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import com.websystique.springsecurity.model.Sujet;
+import com.websystique.springsecurity.model.User;
 
 @Repository("sujetDao")
 public class SujetDaoImpl extends AbstractDao<Integer, Sujet> implements SujetDao{
@@ -30,6 +32,15 @@ public class SujetDaoImpl extends AbstractDao<Integer, Sujet> implements SujetDa
 	@Override
 	public void save(Sujet sujet) {
 		persist(sujet);
+	}
+
+	@Override
+	public Sujet findById(int id) {
+		Sujet sujet = getByKey(id);
+        if(sujet!=null){
+            Hibernate.initialize(sujet.getCommentaires());
+        }
+        return sujet;
 	}
 
 }

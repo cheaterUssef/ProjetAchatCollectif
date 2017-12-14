@@ -30,4 +30,9 @@ public class SujetServiceImpl implements SujetService{
 		dao.save(sujet);
 	}
 
+	@Override
+	public Sujet findById(int id) {
+		return dao.findById(id);
+	}
+
 }

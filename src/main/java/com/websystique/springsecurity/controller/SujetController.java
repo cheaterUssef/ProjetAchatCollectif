@@ -16,6 +16,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import com.websystique.springsecurity.configuration.TypeToSujetTypeConverter;
 import com.websystique.springsecurity.model.Sujet;
 import com.websystique.springsecurity.model.SujetType;
+import com.websystique.springsecurity.model.User;
 import com.websystique.springsecurity.service.SujetService;
 import com.websystique.springsecurity.service.SujetTypeService;
 import com.websystique.springsecurity.service.UserService;
@@ -50,6 +52,18 @@ public class SujetController {
 	        return "sujetslist";
 	   	}
 	
+	@RequestMapping(value = { "/{sujet_id}/show" }, method = RequestMethod.GET)
+    public String showSujet(ModelMap model, @PathVariable Integer sujet_id) {
+
+ 
+        Sujet sujet = sujetService.findById(sujet_id);
+ 
+        model.addAttribute("sujet", sujet);
+        model.addAttribute("comments", sujet.getCommentaires());
+        
+        return "show_sujet";
+    }
+	
 	/**
      * This method will provide the medium to add a new sujet.
      */
@@ -71,6 +85,14 @@ public class SujetController {
      */
     @RequestMapping(value = { "/newsujet" }, method = RequestMethod.POST)
     public String saveSujet(@Valid Sujet sujet, BindingResult result, ModelMap model) {
+    	
+    	if (result.hasErrors()) {
+    		for (ObjectError iterable_element : result.getFieldErrors()) {
+				System.out.println(iterable_element.getObjectName()+ " **** " + iterable_element.getDefaultMessage());
+			}
+            return "new_sujet";
+        }
+        
     	DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     	Date date = Calendar.getInstance().getTime();
     	Calendar c = Calendar.getInstance();
@@ -82,13 +104,6 @@ public class SujetController {
     	sujet.setPrix_diminue(sujet.getPrix_original());
     	sujet.setUser(userService.findBySSO((( (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername())));
     	
-    	if (result.hasErrors()) {
-    		for (ObjectError iterable_element : result.getFieldErrors()) {
-				System.out.println(iterable_element.getObjectName()+ " **** " + iterable_element.getDefaultMessage());
-			}
-            return "new_sujet";
-        }
-         
         sujetService.saveSujet(sujet);
  
         model.addAttribute("success", "Sujet" +sujet.getName()+"is registered successfully");
