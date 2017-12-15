@@ -19,4 +19,9 @@ public class CommentaireServiceImpl implements CommentaireService{
 		dao.save(commentaire);
 	}
 
+	@Override
+	public void deleteCommentById(Integer comment_id) {
+		dao.deleteById(comment_id);
+	}
+
 }

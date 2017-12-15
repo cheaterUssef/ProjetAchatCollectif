@@ -57,8 +57,9 @@
                     <tr>
                         <th>contenu</th>
                         <th>date creation</th>
-                        <th>sujet id</th>
-                        <th>user id</th>                       
+                        <th>sujet name</th>
+                        <th>user name</th>
+                        <th>delete</th>                     
                     </tr>
                 </thead>
                 <tbody>
@@ -68,6 +69,22 @@
                         <td>${comment.date_creation}</td>
                         <td>${comment.sujet.name}</td>
                         <td>${comment.user.firstName}</td>
+                        <td>
+                        		<sec:authorize access="hasRole('USER')">
+	                        		<c:if test="${current_user_comments_ids.contains(comment.id)}">
+		                        	<c:url var="deleteUrl" value="/comment/${comment.id}/delete" />
+		                        	<form:form method="POST" action="${deleteUrl}">
+		                        		<input type="submit" class="btn btn-block btn-primary btn-default" value="delete">
+		                        	</form:form>
+		                        	</c:if>
+	                        	</sec:authorize>
+	                        	<sec:authorize access="hasRole('ADMIN')">
+	                        		<c:url var="deleteUrl" value="/comment/${comment.id}/delete" />
+		                        	<form:form method="POST" action="${deleteUrl}">
+		                        		<input type="submit" class="btn btn-block btn-primary btn-default" value="delete">
+		                        	</form:form>
+	                        	</sec:authorize>
+                        </td>
                     </tr>
                 </c:forEach>
                 </tbody>

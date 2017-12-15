@@ -12,6 +12,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -58,6 +59,9 @@ public class Sujet implements Serializable {
 	@ManyToOne
 	private User user;
 	
+	@ManyToMany(fetch = FetchType.EAGER)
+	private Set<User> adherents = new HashSet<User>();
+	
 	@NotNull
     @Column(name="duree_validite", nullable=false)
 	private Integer duree_validite;
@@ -81,8 +85,16 @@ public class Sujet implements Serializable {
 	@Column(name="date_creation", nullable=false)
 	private Date date_creation;
 	
-	@OneToMany(mappedBy="sujet", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy="sujet", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
 	private Set<Commentaire> Commentaires = new HashSet<Commentaire>();
+
+	public Set<User> getAdherents() {
+		return adherents;
+	}
+
+	public void setAdherents(Set<User> adherents) {
+		this.adherents = adherents;
+	}
 
 	public Date getDate_creation() {
 		return date_creation;

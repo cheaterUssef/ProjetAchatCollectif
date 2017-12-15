@@ -8,11 +8,11 @@ public interface CommentaireService {
     
 //  User findBySSO(String sso);
    
-  void saveComment(Commentaire commentaire);
+	void saveComment(Commentaire commentaire);
+
+  	void deleteCommentById(Integer comment_id);
    
 //  void updateUser(User user);
-   
-//  void deleteUserBySSO(String sso);
 
 //	List<Sujet> findAllSujets(); 
    

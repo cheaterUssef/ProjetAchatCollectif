@@ -3,6 +3,7 @@ package com.websystique.springsecurity.controller;
 import java.util.Calendar;
 import java.util.Date;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,5 +47,11 @@ public class CommentaireController {
         commentaire.setSujet(sujetService.findById(sujet_id));
         commentService.saveComment(commentaire);
         return "redirect:/sujet/"+sujet_id+"/show";
+    }
+	
+	@RequestMapping(value = { "/{comment_id}/delete" }, method = RequestMethod.POST)
+    public String deleteComment(@PathVariable Integer comment_id, HttpServletRequest request) {
+        commentService.deleteCommentById(comment_id);
+        return "redirect:" + request.getHeader("Referer");
     }
 }

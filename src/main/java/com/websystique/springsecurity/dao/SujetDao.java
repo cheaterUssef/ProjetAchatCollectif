@@ -12,7 +12,7 @@ public interface SujetDao {
 //     
     void save(Sujet sujet);
 //     
-//    void deleteBySSO(String sso);
+    void deleteById(int id);
 //     
 	List<Sujet> findAllSujets();
 

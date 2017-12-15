@@ -2,10 +2,12 @@ package com.websystique.springsecurity.controller;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,7 @@ import com.websystique.springsecurity.configuration.TypeToSujetTypeConverter;
 import com.websystique.springsecurity.model.Commentaire;
 import com.websystique.springsecurity.model.Sujet;
 import com.websystique.springsecurity.model.SujetType;
+import com.websystique.springsecurity.model.User;
 import com.websystique.springsecurity.service.SujetService;
 import com.websystique.springsecurity.service.SujetTypeService;
 import com.websystique.springsecurity.service.UserService;
@@ -46,10 +49,33 @@ public class SujetController {
 	@RequestMapping(value = { "/all" }, method = RequestMethod.GET)
 		public String listSujets(ModelMap model) {
 			
-		List<Sujet> sujets = sujetService.findAllSujets();
-	        model.addAttribute("sujets", sujets);
-	        
-	        return "sujetslist";
+			List<Sujet> sujets = sujetService.findAllSujets();
+			
+			// à optimiser (juste si le user a le role user)
+			User current_user = userService.findBySSO((( (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername())); 
+			
+			// just a Test
+			for (Sujet sujet : current_user.getSujets_adheres()) {
+				System.out.println("sujet adheres ***** "+ sujet.getName()+"***********");
+			}
+			// just a test end
+			
+			List<Integer> current_user_sujet_ids = new ArrayList<>();
+			for (Sujet sujet : current_user.getSujets()) {
+				current_user_sujet_ids.add(sujet.getId());
+				System.out.println("current user :"+sujet.getId()+" "+sujet.getName());
+			}
+			
+			List<Integer> current_user_sujets_adheres_ids = new ArrayList<>();
+			for (Sujet sujet : current_user.getSujets_adheres()) {
+				current_user_sujets_adheres_ids.add(sujet.getId());
+				System.out.println("current user - sujets adheres :"+sujet.getId()+" "+sujet.getName());
+			}
+			
+			model.addAttribute("sujets", sujets);
+		    model.addAttribute("current_user_sujet_ids", current_user_sujet_ids);
+		    model.addAttribute("current_user_sujets_adheres_ids", current_user_sujets_adheres_ids);
+		    return "sujetslist";
 	   	}
 	
 	@RequestMapping(value = { "/{sujet_id}/show" }, method = RequestMethod.GET)
@@ -59,6 +85,12 @@ public class SujetController {
         Commentaire commentaire = new Commentaire();
         model.addAttribute("commentaire", commentaire);
         
+//        User current_user = userService.findBySSO((( (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername())); 
+		
+//        List<Integer> current_user_comments_ids = new ArrayList<>();
+//        for (Integer integer : current_user.get) {
+//			
+//		}
         model.addAttribute("sujet", sujet);
         model.addAttribute("comments", sujet.getCommentaires());
         
@@ -75,6 +107,34 @@ public class SujetController {
         model.addAttribute("edit", false);
         model.addAttribute("loggedinuser", getPrincipal());
         return "new_sujet";
+    }
+    
+    @RequestMapping(value = { "/{sujet_id}/delete" }, method = RequestMethod.POST)
+    public String deleteSujet(@PathVariable Integer sujet_id) {
+        sujetService.deleteSujetById(sujet_id);
+        return "redirect:/sujet/all";
+    }
+    
+    @RequestMapping(value = { "/{sujet_id}/adherer" }, method = RequestMethod.POST)
+    public String adhererSujet(@PathVariable Integer sujet_id, HttpServletRequest request) {
+    	User current_user = userService.findBySSO((( (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername())); 
+    	Sujet sujet = sujetService.findById(sujet_id);
+        
+    	if(sujet.getNombre_max_adherent() > sujet.getNombre_adherent()) {
+    		
+	    	current_user.getSujets_adheres().add(sujet);
+	    	
+	    	sujet.getAdherents().add(current_user);
+	    	sujet.setNombre_adherent(sujet.getNombre_adherent()+1);
+	    	
+	    	// algorithme de reduction : à modifier
+	    	sujet.setPrix_diminue(sujet.getPrix_original() / sujet.getNombre_adherent());
+	
+	    	userService.updateUser(current_user);
+	    	sujetService.updateService(sujet);
+    	}
+        
+        return "redirect:" + request.getHeader("Referer");
     }
     
     @Autowired

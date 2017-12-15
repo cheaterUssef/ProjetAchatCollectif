@@ -57,10 +57,21 @@ public class User implements Serializable{
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<UserProfile> userProfiles = new HashSet<UserProfile>();
     
-    @OneToMany(mappedBy="user")
+    @OneToMany(mappedBy="user", fetch = FetchType.EAGER)
     private List<Sujet> sujets = new ArrayList<Sujet>();
+    
+    @ManyToMany(mappedBy="adherents", fetch = FetchType.EAGER)
+    private Set<Sujet> sujets_adheres = new HashSet<Sujet>();
  
-    public Integer getId() {
+    public Set<Sujet> getSujets_adheres() {
+		return sujets_adheres;
+	}
+
+	public void setSujets_adheres(Set<Sujet> sujets_adheres) {
+		this.sujets_adheres = sujets_adheres;
+	}
+
+	public Integer getId() {
         return id;
     }
  

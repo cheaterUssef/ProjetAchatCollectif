@@ -9,7 +9,7 @@ public interface CommentaireDao {
 //     
     void save(Commentaire commentaire);
 //     
-//    void deleteBySSO(String sso);
+    void deleteById(Integer comment_id);
 //     
 //	List<Sujet> findAllSujets();
 }

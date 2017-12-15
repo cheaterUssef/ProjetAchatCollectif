@@ -10,11 +10,11 @@ public interface SujetService {
     
 //  User findBySSO(String sso);
    
-  void saveSujet(Sujet sujet);
+	void saveSujet(Sujet sujet);
    
-//  void updateUser(User user);
+	void updateService(Sujet sujet);
    
-//  void deleteUserBySSO(String sso);
+	void deleteSujetById(int id);
 
 	List<Sujet> findAllSujets(); 
    
