@@ -62,8 +62,19 @@ public class User implements Serializable{
     
     @ManyToMany(mappedBy="adherents", fetch = FetchType.EAGER)
     private Set<Sujet> sujets_adheres = new HashSet<Sujet>();
+    
+    @OneToMany(mappedBy="user", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+	private Set<Commentaire> Commentaires = new HashSet<Commentaire>();
  
-    public Set<Sujet> getSujets_adheres() {
+    public Set<Commentaire> getCommentaires() {
+		return Commentaires;
+	}
+
+	public void setCommentaires(Set<Commentaire> commentaires) {
+		Commentaires = commentaires;
+	}
+
+	public Set<Sujet> getSujets_adheres() {
 		return sujets_adheres;
 	}
 

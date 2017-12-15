@@ -85,14 +85,17 @@ public class SujetController {
         Commentaire commentaire = new Commentaire();
         model.addAttribute("commentaire", commentaire);
         
-//        User current_user = userService.findBySSO((( (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername())); 
+        User current_user = userService.findBySSO((( (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername())); 
 		
-//        List<Integer> current_user_comments_ids = new ArrayList<>();
-//        for (Integer integer : current_user.get) {
-//			
-//		}
+        List<Integer> current_user_comments_ids = new ArrayList<>();
+        for (Commentaire comment : current_user.getCommentaires()) {
+        	current_user_comments_ids.add(comment.getId());
+        	System.out.println("current comment ids "+ comment.getId()+ " "+ comment.getContenu());
+		}
         model.addAttribute("sujet", sujet);
         model.addAttribute("comments", sujet.getCommentaires());
+        
+        model.addAttribute("current_user_comments_ids", current_user_comments_ids);
         
         return "show_sujet";
     }
