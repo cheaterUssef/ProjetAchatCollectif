@@ -53,7 +53,7 @@ public class User implements Serializable{
 //             inverseJoinColumns = { @JoinColumn(name = "userProfiles_id") })
 //    private Set<UserProfile> userProfiles = new HashSet<UserProfile>();
     
-    @NotEmpty
+  //  @NotEmpty
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<UserProfile> userProfiles = new HashSet<UserProfile>();
     

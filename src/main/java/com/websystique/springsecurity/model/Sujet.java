@@ -12,6 +12,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -20,10 +21,17 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+
+
 @Entity
 @Table(name="SUJET")
 public class Sujet implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer id;
 	
@@ -43,7 +51,7 @@ public class Sujet implements Serializable {
     @Column(name="prix_diminue", nullable=false)
 	private Double prix_diminue;
 	
-	@NotNull
+	//@NotNull
     @Column(name="nombre_adherent", nullable=false)
 	private Integer nombre_adherent;
 	
@@ -81,6 +89,8 @@ public class Sujet implements Serializable {
 //	@NotEmpty
 //	@OneToOne
 //	private ImageSujet image;
+	
+
 	
 	@Column(name="date_creation", nullable=false)
 	private Date date_creation;

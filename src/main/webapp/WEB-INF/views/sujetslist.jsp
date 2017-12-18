@@ -69,7 +69,7 @@
 	                        	</sec:authorize>
 	                        </td>
 	                    	<td>
-	                    		<sec:authorize access="hasRole('USER')">
+	                    		<sec:authorize access="hasRole('ADMIN') or hasRole('USER')">
 	                    			<c:if test="${!current_user_sujets_adheres_ids.contains(sujet.id) && !current_user_sujet_ids.contains(sujet.id)}">
 			                        	<c:if test="${sujet.nombre_adherent < sujet.nombre_max_adherent}">
 											<c:url var="adhererUrl" value="/sujet/${sujet.id}/adherer" />

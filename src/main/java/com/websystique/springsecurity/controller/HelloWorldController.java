@@ -1,5 +1,6 @@
 package com.websystique.springsecurity.controller;
  
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -9,6 +10,8 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,8 +27,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import com.websystique.spring.configuration.AppConfig;
+import com.websystique.spring.service.OrderService;
+import com.websystique.springsecurity.model.ProductOrder;
+import com.websystique.springsecurity.model.Sujet;
 import com.websystique.springsecurity.model.User;
 import com.websystique.springsecurity.model.UserProfile;
+import com.websystique.springsecurity.service.SujetService;
 import com.websystique.springsecurity.service.UserProfileService;
 import com.websystique.springsecurity.service.UserService;
  
@@ -47,12 +55,38 @@ public class HelloWorldController {
     PersistentTokenBasedRememberMeServices persistentTokenBasedRememberMeServices;
      
     @Autowired
+    SujetService  sujetService;
+    
+    @Autowired
     AuthenticationTrustResolver authenticationTrustResolver;
      
     /**
      * This method will list all existing users.
      */
-    @RequestMapping(value = { "/", "/list" }, method = RequestMethod.GET)
+    
+    @RequestMapping(value = { "/"}, method = RequestMethod.GET)
+    public String index(ModelMap model) {
+//    	User current_user = userService.findBySSO((( (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername())); 
+//    	List<Sujet> sujets = sujetService.findAllSujets();
+//    	model.addAttribute("sujets", sujets);
+//    	List<Integer> current_user_sujet_ids = new ArrayList<>();
+//    	List<Integer> current_user_sujets_adheres_ids = new ArrayList<>();
+//    	for (Sujet sujet : current_user.getSujets()) {
+//			current_user_sujet_ids.add(sujet.getId());
+//			System.out.println("current user :"+sujet.getId()+" "+sujet.getName());
+//		}
+//    	for (Sujet sujet : current_user.getSujets_adheres()) {
+//			current_user_sujets_adheres_ids.add(sujet.getId());
+//			System.out.println("current user - sujets adheres :"+sujet.getId()+" "+sujet.getName());
+//		}
+//    	   model.addAttribute("current_user_sujet_ids", current_user_sujet_ids);
+//		    model.addAttribute("current_user_sujets_adheres_ids", current_user_sujets_adheres_ids);
+    	
+        return "redirect:/sujet/all";
+    }
+    
+    
+    @RequestMapping(value = { "/list" }, method = RequestMethod.GET)
     public String listUsers(ModelMap model) {
  
         List<User> users = userService.findAllUsers();
@@ -66,11 +100,16 @@ public class HelloWorldController {
      */
     @RequestMapping(value = { "/newuser" }, method = RequestMethod.GET)
     public String newUser(ModelMap model) {
-        User user = new User();
-        model.addAttribute("user", user);
-        model.addAttribute("edit", false);
-        model.addAttribute("loggedinuser", getPrincipal());
-        return "registration";
+    	if (isCurrentAuthenticationAnonymous()) {
+    		User user = new User();
+            model.addAttribute("user", user);
+            model.addAttribute("edit", false);
+            //model.addAttribute("loggedinuser", getPrincipal());
+            return "registration";
+        } else {
+        	return "redirect:/sujet/all";
+        }
+        
     }
  
     /**
@@ -92,6 +131,7 @@ public class HelloWorldController {
          * framework as well while still using internationalized messages.
          * 
          */
+        user.getUserProfiles().add(userProfileService.findById(1));
         if(!userService.isUserSSOUnique(user.getId(), user.getSsoId())){
             FieldError ssoError = new FieldError("user","ssoId",messageSource.getMessage("non.unique.ssoId", new String[]{user.getSsoId()}, Locale.getDefault()));
             result.addError(ssoError);
@@ -103,7 +143,7 @@ public class HelloWorldController {
         model.addAttribute("success", "User " + user.getFirstName() + " "+ user.getLastName() + " registered successfully");
         model.addAttribute("loggedinuser", getPrincipal());
         //return "success";
-        return "registrationsuccess";
+        return "redirect:/";
     }
  
  
@@ -181,7 +221,7 @@ public class HelloWorldController {
         if (isCurrentAuthenticationAnonymous()) {
             return "login";
         } else {
-            return "redirect:/list";  
+            return "redirect:/";  
         }
     }
  
@@ -222,5 +262,41 @@ public class HelloWorldController {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return authenticationTrustResolver.isAnonymous(authentication);
     }
+    
+    @RequestMapping(value="/email", method = RequestMethod.GET)
+    public String sendemail (HttpServletRequest request, HttpServletResponse response){
+    	
+    	   User current_user = userService.findBySSO((( (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername())); 
+    	   
+    	 AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+    	 
+         OrderService orderService = (OrderService) context.getBean("orderService");
+         ProductOrder order = new ProductOrder();
+         order.setOrderId("1111");
+         order.setProductName("Thinkpad T510");
+         order.setStatus("confirmed");
+   
+         order.setCustomerInfo(current_user);
+         orderService.sendOrderConfirmation(order);
+         ((AbstractApplicationContext) context).close();
+     
+      
+   
+        return "redirect:/login?logout";
+    }
+
+
+//  public static ProductOrder getDummyOrder(){
+//    ProductOrder order = new ProductOrder();
+//    order.setOrderId("1111");
+//    order.setProductName("Thinkpad T510");
+//    order.setStatus("confirmed");
+//     
+//    User customerInfo = new User();
+//    customerInfo.setFirstName("Websystique Admin");
+//    customerInfo.setEmail("meryem.chaiby@gmail.com");
+//    order.setCustomerInfo(customerInfo);
+//    return order;
+//}
  
 }

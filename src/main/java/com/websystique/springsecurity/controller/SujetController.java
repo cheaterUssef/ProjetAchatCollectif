@@ -11,6 +11,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.AbstractApplicationContext;
+import org.springframework.security.authentication.AuthenticationTrustResolver;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -21,10 +25,17 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
+import com.websystique.spring.configuration.AppConfig;
+import com.websystique.spring.service.OrderService;
 import com.websystique.springsecurity.configuration.TypeToSujetTypeConverter;
+import com.websystique.springsecurity.dao.FileUploadDAO;
 import com.websystique.springsecurity.model.Commentaire;
+import com.websystique.springsecurity.model.ImageSujet;
+import com.websystique.springsecurity.model.ProductOrder;
 import com.websystique.springsecurity.model.Sujet;
 import com.websystique.springsecurity.model.SujetType;
 import com.websystique.springsecurity.model.User;
@@ -37,6 +48,9 @@ import com.websystique.springsecurity.service.UserService;
 @SessionAttributes("types")
 public class SujetController {
 	
+	  @Autowired
+	    private FileUploadDAO fileUploadDao;
+	  
 	@Autowired
 	SujetService sujetService;
 	
@@ -45,20 +59,24 @@ public class SujetController {
 	
 	@Autowired
 	SujetTypeService sujetTypeService;
+	
+	@Autowired
+    AuthenticationTrustResolver authenticationTrustResolver;
+	
+	private boolean isCurrentAuthenticationAnonymous() {
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authenticationTrustResolver.isAnonymous(authentication);
+    }
 
 	@RequestMapping(value = { "/all" }, method = RequestMethod.GET)
 		public String listSujets(ModelMap model) {
 			
-			List<Sujet> sujets = sujetService.findAllSujets();
 			
+			//if(SecurityContextHolder.getContext().getAuthentication().isAuthenticated()){	
+		if (!isCurrentAuthenticationAnonymous()){
 			// à optimiser (juste si le user a le role user)
 			User current_user = userService.findBySSO((( (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername())); 
 			
-			// just a Test
-			for (Sujet sujet : current_user.getSujets_adheres()) {
-				System.out.println("sujet adheres ***** "+ sujet.getName()+"***********");
-			}
-			// just a test end
 			
 			List<Integer> current_user_sujet_ids = new ArrayList<>();
 			for (Sujet sujet : current_user.getSujets()) {
@@ -71,11 +89,15 @@ public class SujetController {
 				current_user_sujets_adheres_ids.add(sujet.getId());
 				System.out.println("current user - sujets adheres :"+sujet.getId()+" "+sujet.getName());
 			}
-			
-			model.addAttribute("sujets", sujets);
+
 		    model.addAttribute("current_user_sujet_ids", current_user_sujet_ids);
 		    model.addAttribute("current_user_sujets_adheres_ids", current_user_sujets_adheres_ids);
-		    return "sujetslist";
+		    
+			}
+			
+			List<Sujet> sujets = sujetService.findAllSujets();
+			model.addAttribute("sujets", sujets);
+		    return "index";
 	   	}
 	
 	@RequestMapping(value = { "/{sujet_id}/show" }, method = RequestMethod.GET)
@@ -85,6 +107,7 @@ public class SujetController {
         Commentaire commentaire = new Commentaire();
         model.addAttribute("commentaire", commentaire);
         
+        if (!isCurrentAuthenticationAnonymous()){
         User current_user = userService.findBySSO((( (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername())); 
 		
         List<Integer> current_user_comments_ids = new ArrayList<>();
@@ -92,11 +115,34 @@ public class SujetController {
         	current_user_comments_ids.add(comment.getId());
         	System.out.println("current comment ids "+ comment.getId()+ " "+ comment.getContenu());
 		}
-        model.addAttribute("sujet", sujet);
-        model.addAttribute("comments", sujet.getCommentaires());
+        
+        
         
         model.addAttribute("current_user_comments_ids", current_user_comments_ids);
         
+        //---------------------------------------
+        
+    	
+    	List<Integer> current_user_sujet_ids = new ArrayList<>();
+    	List<Integer> current_user_sujets_adheres_ids = new ArrayList<>();
+    	for (Sujet sujeet : current_user.getSujets()) {
+			current_user_sujet_ids.add(sujeet.getId());
+			System.out.println("current user :"+sujeet.getId()+" "+sujeet.getName());
+		}
+    	for (Sujet sujeet : current_user.getSujets_adheres()) {
+			current_user_sujets_adheres_ids.add(sujeet.getId());
+			System.out.println("current user - sujets adheres :"+sujeet.getId()+" "+sujeet.getName());
+		}
+    	   model.addAttribute("current_user_sujet_ids", current_user_sujet_ids);
+		    model.addAttribute("current_user_sujets_adheres_ids", current_user_sujets_adheres_ids);
+        
+        }
+        
+		    model.addAttribute("sujet", sujet);
+	        model.addAttribute("comments", sujet.getCommentaires());
+
+	        List<Sujet> sujets = sujetService.findAllSujets();
+	        model.addAttribute("sujets", sujets);
         return "show_sujet";
     }
 	
@@ -135,6 +181,20 @@ public class SujetController {
 	
 	    	userService.updateUser(current_user);
 	    	sujetService.updateService(sujet);
+	    	
+    	   
+	    	 AbstractApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+	    	 
+	         OrderService orderService = (OrderService) context.getBean("orderService");
+	         ProductOrder order = new ProductOrder();
+	         order.setOrderId(String.valueOf(sujet.getId()));
+	         order.setProductName(sujet.getName());
+	         order.setStatus("confirmed");
+	   
+	         order.setCustomerInfo(current_user);
+	         orderService.sendOrderConfirmation(order);
+	         ((AbstractApplicationContext) context).close();
+	     
     	}
         
         return "redirect:" + request.getHeader("Referer");
@@ -167,13 +227,13 @@ public class SujetController {
     	sujet.setDate_creation(date);
     	sujet.setPrix_diminue(sujet.getPrix_original());
     	sujet.setUser(userService.findBySSO((( (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername())));
-    	
+    	sujet.setNombre_adherent(0);
         sujetService.saveSujet(sujet);
  
         model.addAttribute("success", "Sujet" +sujet.getName()+"is registered successfully");
         model.addAttribute("loggedinuser", getPrincipal());
-        //return "success";
-        return "creation_sujet_success";
+        return "managedocuments";
+//        return "creation_sujet_success";
     }
     
     private String getPrincipal(){
@@ -192,5 +252,7 @@ public class SujetController {
     public List<SujetType> initializeSujetTypes() {
         return sujetTypeService.findAllSujetTypes();
     }
+    
+
 
 }

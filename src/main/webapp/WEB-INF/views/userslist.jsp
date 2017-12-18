@@ -57,6 +57,9 @@
                 <a href="<c:url value='/newuser' />">Add New User</a>
             </div>
         </sec:authorize>
+        
+         <a href="<c:url value='/email' />" class="btn btn-success custom-width">email</a>
+        
     </div>
 </body>
 </html>

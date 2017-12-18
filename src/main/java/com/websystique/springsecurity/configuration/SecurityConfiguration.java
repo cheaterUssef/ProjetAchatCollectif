@@ -47,15 +47,45 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return authenticationProvider;
     }
      
+//    @Override
+//    protected void configure(HttpSecurity http) throws Exception {
+//        http.authorizeRequests().antMatchers("/", "/list").access("hasRole('USER') or hasRole('ADMIN') or hasRole('DBA')")
+//                .antMatchers("/newuser/**", "/delete-user-*").access("hasRole('ADMIN')")
+//                .antMatchers("/sujet/newsujet").access("hasRole('USER') or hasRole('ADMIN') or hasRole('DBA')")
+//                .antMatchers("/edit-user-*").access("hasRole('ADMIN') or hasRole('DBA')")
+//                .antMatchers("/sujet/all").permitAll()
+//                .antMatchers("sujet/*/show").access("hasRole('USER') or hasRole('ADMIN') or hasRole('DBA')")
+//                .antMatchers("sujet/*/delete").access("hasRole('USER') or hasRole('ADMIN')")
+//                .and().formLogin().loginPage("/login")
+//                .loginProcessingUrl("/login").usernameParameter("ssoId").passwordParameter("password").and()
+//                .rememberMe().rememberMeParameter("remember-me").tokenRepository(tokenRepository)
+//                .tokenValiditySeconds(86400).and().csrf().and().exceptionHandling().accessDeniedPage("/Access_Denied");
+//    }
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/", "/list").access("hasRole('USER') or hasRole('ADMIN') or hasRole('DBA')")
-                .antMatchers("/newuser/**", "/delete-user-*").access("hasRole('ADMIN')")
-                .antMatchers("/sujet/newsujet").access("hasRole('USER') or hasRole('ADMIN') or hasRole('DBA')")
-                .antMatchers("/edit-user-*").access("hasRole('ADMIN') or hasRole('DBA')")
+        http.authorizeRequests()
+
                 .antMatchers("/sujet/all").permitAll()
-                .antMatchers("sujet/*/show").access("hasRole('USER') or hasRole('ADMIN') or hasRole('DBA')")
-                .antMatchers("sujet/*/delete").access("hasRole('USER') or hasRole('ADMIN')")
+                .antMatchers("/sujet/*/show").permitAll()
+                .antMatchers("/sujet/newsujet").access("hasRole('USER') or hasRole('ADMIN')")
+                .antMatchers("/sujet/*/delete").access("hasRole('USER') or hasRole('ADMIN')")
+                .antMatchers("/sujet/*/adherer").access("hasRole('USER') or hasRole('ADMIN')")
+                
+
+                .antMatchers("/comment/*/newcomment").access("hasRole('USER') or hasRole('ADMIN')")
+                .antMatchers("/comment/*/delete").access("hasRole('USER') or hasRole('ADMIN')")
+
+
+                .antMatchers("/").permitAll()
+                .antMatchers("/list").access("hasRole('ADMIN')")
+                .antMatchers("/newuser").permitAll() // get and post
+                .antMatchers("/edit-user-*").access("hasRole('USER') or hasRole('ADMIN')")  // get and post
+                .antMatchers("/delete-user-*").access("hasRole('ADMIN')") // post
+                .antMatchers("/login").permitAll()
+                //.antMatchers("/logout").access("hasRole('USER') or hasRole('ADMIN')") 
+
+                
+                
                 .and().formLogin().loginPage("/login")
                 .loginProcessingUrl("/login").usernameParameter("ssoId").passwordParameter("password").and()
                 .rememberMe().rememberMeParameter("remember-me").tokenRepository(tokenRepository)
