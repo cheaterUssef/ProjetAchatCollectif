@@ -134,38 +134,22 @@
 						<ul class="dropdown-menu">
 							<li><a href="<c:url value='/login' />">Login </a></li> 
 							<li><a href="<c:url value='/newuser' />">Sign Up</a></li> 
-							<li><a href="login.html">My Orders</a></li>  
-							<li><a href="login.html">Wallet</a></li> 
+							<li><a href="<c:url value='/logout' />">Logout</a></li>
 						</ul> 
 					</li> 
-					<li class="dropdown head-dpdn">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-percent" aria-hidden="true"></i> Today's Deals<span class="caret"></span></a>
-						<ul class="dropdown-menu">
-							<li><a href="offers.html">Cash Back Offers</a></li> 
-							<li><a href="offers.html">Product Discounts</a></li>
-							<li><a href="offers.html">Special Offers</a></li> 
-						</ul> 
-					</li> 
+					
 					<sec:authorize access="hasRole('USER') or hasRole('ADMIN')"> 
 					<li class="dropdown head-dpdn">
-						<a href="<c:url value='/newsujet' />" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-gift" aria-hidden="true"></i> Add Article<span class="caret"></span></a>
+						<a href="<c:url value='/sujet/newsujet' />" class="dropdown-toggle"><i class="fa fa-credit-card-alt" aria-hidden="true"></i>Add Article</a>
 						
 					</li> 
 					</sec:authorize>
 				 <sec:authorize access="hasRole('ADMIN')"> 
 				 <li class="dropdown head-dpdn">
-					<a href=" <c:url value="/list" />" class="dropdown-toggle"><i class="fa fa-users" aria-hidden="true"></i> List Users</a>
+					<a href=" <c:url value="/list" />" class="dropdown-toggle"><i class="fa fa-users" aria-hidden="true"></i>List Users</a>
 				 </li>
 				  </sec:authorize>
-					<li class="dropdown head-dpdn">
-						<a href="contact.html" class="dropdown-toggle"><i class="fa fa-map-marker" aria-hidden="true"></i> Store Finder</a>
-					</li> 
-					<li class="dropdown head-dpdn">
-						<a href="card.html" class="dropdown-toggle"><i class="fa fa-credit-card-alt" aria-hidden="true"></i> Credit Card</a>
-					</li> 
-					<li class="dropdown head-dpdn">
-						<a href="help.html" class="dropdown-toggle"><i class="fa fa-question-circle" aria-hidden="true"></i> Help</a>
-					</li>
+					
 				</ul>
 			</div>
 			<div class="clearfix"> </div> 
@@ -989,17 +973,6 @@
 			</div>
 		</div>
 	</div>
-	<!-- //header --> 
-	<!-- breadcrumbs --> 
-	<div class="container"> 
-		<ol class="breadcrumb breadcrumb1">
-			<li><a href="index.html">Home</a></li>
-			<li class="active">Single Page</li>
-		</ol> 
-		<div class="clearfix"> </div>
-	</div>
-	<!-- //breadcrumbs -->
-	<!-- products -->
 	<div class="products">	 
 		<div class="container">  
 			<div class="single-page">
@@ -1008,62 +981,114 @@
 						<div class="flexslider">
 							<ul class="slides">
 								<li data-thumb="<c:url value='/static/images/s1.jpg' />">
-									<div class="thumb-image detail_images"> <img src="<c:url value='/static/images/s1.jpg' />" data-imagezoom="true" class="img-responsive" alt=""> </div>
-								</li>
-								<li data-thumb="<c:url value='/static/images/s2.jpg' />">
-									 <div class="thumb-image"> <img src="<c:url value='/static/images/s2.jpg' />" data-imagezoom="true" class="img-responsive" alt=""> </div>
-								</li>
-								<li data-thumb="<c:url value='/static/images/s3.jpg' />">
-								   <div class="thumb-image"> <img src="<c:url value='/static/images/s3.jpg' />" data-imagezoom="true" class="img-responsive" alt=""> </div>
+									<div class="thumb-image detail_images"> <img src="<c:url value='/static/images/e1.png'/>" data-imagezoom="true" class="img-responsive" alt=""> </div>
 								</li> 
 							</ul>
 						</div>
 					</div>
 					<div class="col-md-6 single-top-right">
-						<h3 class="item_name">Electric Snow Blower</h3>
-						<p>Processing Time: Item will be shipped out within 2-3 working days. </p>
+						<h3 class="item_name">${sujet.name}</h3>
 						<div class="single-rating">
 							<ul>
-								<li><i class="fa fa-star-o" aria-hidden="true"></i></li>
-								<li><i class="fa fa-star-o" aria-hidden="true"></i></li>
-								<li><i class="fa fa-star-o" aria-hidden="true"></i></li>
-								<li><i class="fa fa-star-o" aria-hidden="true"></i></li>
-								<li><i class="fa fa-star-o" aria-hidden="true"></i></li>
-								<li class="rating">20 reviews</li>
-								<li><a href="#">Add your review</a></li>
+								
 							</ul> 
 						</div>
 						<div class="single-price">
 							<ul>
-								<li>$540</li>  
-								<li><del>$600</del></li> 
-								<li><span class="w3off">10% OFF</span></li> 
-								<li>Ends on: June,5th</li>
-								<li><a href="#"><i class="fa fa-gift" aria-hidden="true"></i> Coupon</a></li>
+								<li>${sujet.prix_diminue} DH</li>  
+								<li><del>${sujet.prix_original} DH</del></li> 
+								<li><span class="w3off">${sujet.taux_reduction * sujet.nombre_adherent}% OFF</span></li> 
+								
 							</ul>	
 						</div> 
-						<p class="single-price-text">Fusce a egestas nibh, eget ornare erat. Proin placerat, urna et consequat efficitur, sem odio blandit enim, sit amet euismod turpis est mattis lectus. Vestibulum maximus quam et quam egestas imperdiet. In dignissim auctor viverra. </p>
-						<form action="#" method="post">
-							<input type="hidden" name="cmd" value="_cart" />
-							<input type="hidden" name="add" value="1" /> 
-							<input type="hidden" name="w3ls_item" value="Snow Blower" /> 
-							<input type="hidden" name="amount" value="540.00" /> 
-							<button type="submit" class="w3ls-cart" ><i class="fa fa-cart-plus" aria-hidden="true"></i> Add to cart</button>
-						</form>
-						<button class="w3ls-cart w3ls-cart-like"><i class="fa fa-heart-o" aria-hidden="true"></i> Add to Wishlist</button>
-					</div>
+						<p class="single-price-text">Description : ${sujet.description} <br>Type : ${sujet.sujet_type.type}
+						<br>Temps Restant : ${sujet.duree_validite}
+						<br>Créateur : ${sujet.user.firstName} ${sujet.user.lastName}
+						<br>Nombre adhérent / Nombre max d'adhérent : ${sujet.nombre_adherent} / ${sujet.nombre_max_adherent}
+						</p>
+						<sec:authorize access="hasRole('ADMIN') or hasRole('USER')">
+					                    			<c:if test="${!current_user_sujets_adheres_ids.contains(sujet.id) && !current_user_sujet_ids.contains(sujet.id)}">
+							                        	<c:if test="${sujet.nombre_adherent < sujet.nombre_max_adherent}">
+															<c:url var="adhererUrl" value="/sujet/${sujet.id}/adherer" />
+								                        	<form:form method="POST" action="${adhererUrl}">
+								                        		<button type="submit" class="w3ls-cart" ><i class="fa fa-cart-plus" aria-hidden="true"></i>Adhérer</button>
+								                        	</form:form>
+							                        	</c:if>
+							                        	<c:if test="${sujet.nombre_adherent == sujet.nombre_max_adherent}">
+							                        		<button type="submit" class="w3ls-cart" ><i class="fa fa-cart-plus" aria-hidden="true"></i>Nombre max atteint</button>
+								                
+							                        	</c:if>
+						                        	</c:if>
+						                        	<c:if test="${current_user_sujets_adheres_ids.contains(sujet.id)}">
+						                        		<button type="submit" class="w3ls-cart" ><i class="fa fa-cart-plus" aria-hidden="true"></i>Déjà adhéré</button>
+								                
+						                        	</c:if>
+					                        	</sec:authorize>  
+					                        	<sec:authorize access="!hasRole('ADMIN') and !hasRole('USER')">
+					                        	<button type="submit" class="w3ls-cart" ><i class="fa fa-cart-plus" aria-hidden="true"></i>Sign-in first</button>
+								                        	
+					                        	</sec:authorize>
+						</div>
 				   <div class="clearfix"> </div>  
 				</div>
-				<div class="single-page-icons social-icons"> 
-					<ul>
-						<li><h4>Share on</h4></li>
-						<li><a href="#" class="fa fa-facebook icon facebook"> </a></li>
-						<li><a href="#" class="fa fa-twitter icon twitter"> </a></li>
-						<li><a href="#" class="fa fa-google-plus icon googleplus"> </a></li>
-						<li><a href="#" class="fa fa-dribbble icon dribbble"> </a></li>
-						<li><a href="#" class="fa fa-rss icon rss"> </a></li> 
-					</ul>
-				</div>
+				<table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Commentaires</th>
+                        <th>date de création</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <c:forEach items="${comments}" var="comment">
+                    <tr>
+                        <td><b>${comment.user.firstName} ${comment.user.lastName} </b> : ${comment.contenu}</td>
+                        <td>${comment.date_creation}</td>
+                        <td>
+                        		<sec:authorize access="hasRole('USER')">
+	                        		<c:if test="${current_user_comments_ids.contains(comment.id)}">
+		                        	<c:url var="deleteUrl" value="/comment/${comment.id}/delete" />
+		                        	<form:form method="POST" action="${deleteUrl}">
+		                        		<input type="submit" class="btn btn-block btn-primary btn-default" value="delete">
+		                        	</form:form>
+		                        	</c:if>
+	                        	</sec:authorize>
+	                        	<sec:authorize access="hasRole('ADMIN')">
+	                        		<c:url var="deleteUrl" value="/comment/${comment.id}/delete" />
+		                        	<form:form method="POST" action="${deleteUrl}">
+		                        		<input type="submit" class="btn btn-block btn-primary btn-default" value="delete">
+		                        	</form:form>
+	                        	</sec:authorize>
+                        </td>
+                    </tr>
+                </c:forEach>
+                </tbody>
+                
+             </table>
+             
+              <c:url var="newComment" value="/comment/${sujet.id}/newcomment"/>
+	        <form:form method="POST" modelAttribute="commentaire" class="form-horizontal" action="${newComment}">
+	            <form:input type="hidden" path="id" id="id"/>
+	            
+	            <div class="row">
+	                <div class="form-group col-md-12">
+	                    <div class="col-md-7">
+	                        <form:input type="text" path="contenu" id="contenu" class="form-control input-sm"/>
+	                        <div class="has-error">
+	                            <form:errors path="contenu" class="help-inline"/>
+	                        </div>
+	                    </div>
+	                </div>
+	            </div>
+	            
+	            <div class="row">
+	                <div class="form-actions floatRight">
+	                    
+	                 <input type="submit" value="ajouter" class="btn btn-primary btn-sm"/>
+	                </div>
+	            </div>
+	            
+	        </form:form>
+            
 			</div> 
 			<!-- recommendations -->
 			<div class="recommend">
@@ -1193,109 +1218,6 @@
 			<!-- //offers-cards -->
 		</div>
 	</div>
-	<!--//products-->  
-	<!-- Comments -->
-	   <!-- Default panel contents -->
-            <div class="panel-heading"><span class="lead">List of Sujets</span></div>
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Description</th>
-                        <th>prix original</th>
-                        <th>nombre adherent</th>
-                        <th>nombre maximum d'adherent</th>
-                        <th>Créateur</th>
-                        <th>duree de validité</th>
-                        <th>type</th>
-                        <th>taux_reduction</th>
-                        <th>prix_diminue</th>
-                        <th>date création</th>                        
-                    </tr>
-                </thead>
-                <tbody>
-              
-                    <tr>
-                        <td>${sujet.name}</td>
-                        <td>${sujet.description}</td>
-                        <td>${sujet.prix_original}</td>
-                        <td>${sujet.nombre_adherent}</td>
-                        <td>${sujet.nombre_max_adherent}</td>
-                        <td>${sujet.user.firstName}</td>
-                        <td>${sujet.duree_validite}</td>
-                        <td>${sujet.sujet_type.type}</td>
-                        <td>${sujet.taux_reduction}</td>
-                        <td>${sujet.prix_diminue}</td>
-                        <td>${sujet.date_creation}</td>
-                    </tr>
-               
-                </tbody>
-            </table>
-            
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>contenu</th>
-                        <th>date creation</th>
-                        <th>sujet name</th>
-                        <th>user name</th>
-                        <th>delete</th>                     
-                    </tr>
-                </thead>
-                <tbody>
-                <c:forEach items="${comments}" var="comment">
-                    <tr>
-                        <td>${comment.contenu}</td>
-                        <td>${comment.date_creation}</td>
-                        <td>${comment.sujet.name}</td>
-                        <td>${comment.user.firstName}</td>
-                        <td>
-                        		<sec:authorize access="hasRole('USER')">
-	                        		<c:if test="${current_user_comments_ids.contains(comment.id)}">
-		                        	<c:url var="deleteUrl" value="/comment/${comment.id}/delete" />
-		                        	<form:form method="POST" action="${deleteUrl}">
-		                        		<input type="submit" class="btn btn-block btn-primary btn-default" value="delete">
-		                        	</form:form>
-		                        	</c:if>
-	                        	</sec:authorize>
-	                        	<sec:authorize access="hasRole('ADMIN')">
-	                        		<c:url var="deleteUrl" value="/comment/${comment.id}/delete" />
-		                        	<form:form method="POST" action="${deleteUrl}">
-		                        		<input type="submit" class="btn btn-block btn-primary btn-default" value="delete">
-		                        	</form:form>
-	                        	</sec:authorize>
-                        </td>
-                    </tr>
-                </c:forEach>
-                </tbody>
-             </table>
-        </div>
-        <c:url var="newComment" value="/comment/${sujet.id}/newcomment"/>
-        <form:form method="POST" modelAttribute="commentaire" class="form-horizontal" action="${newComment}">
-            <form:input type="hidden" path="id" id="id"/>
-            
-            <div class="row">
-                <div class="form-group col-md-12">
-                    <div class="col-md-7">
-                        <form:input type="text" path="contenu" id="contenu" class="form-control input-sm"/>
-                        <div class="has-error">
-                            <form:errors path="contenu" class="help-inline"/>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="row">
-                <div class="form-actions floatRight">
-                    
-                 <input type="submit" value="ajouter" class="btn btn-primary btn-sm"/>
-                </div>
-            </div>
-            
-        </form:form>
-            
-    </div>
-    
 	<!-- end Comments -->
 	<!-- subscribe -->
 	<div class="subscribe"> 
@@ -1319,7 +1241,7 @@
 			<div class="col-md-6 subscribe-right">
 				<h4>Sign up for email and get 25%off!</h4> 
 				<form action="#" method="post"> 
-					<input type="text" name="email" placeholder="Enter your Email..." required="">
+					<input type="text" name="email" placeholder="Enter your Email..." required>
 					<input type="submit" value="Subscribe">
 				</form>
 				<div class="clearfix"> </div> 

@@ -177,7 +177,9 @@ public class SujetController {
 	    	sujet.setNombre_adherent(sujet.getNombre_adherent()+1);
 	    	
 	    	// algorithme de reduction : à modifier
-	    	sujet.setPrix_diminue(sujet.getPrix_original() / sujet.getNombre_adherent());
+	    	Double prix_diminue = sujet.getPrix_original() - (sujet.getPrix_original() * sujet.getNombre_adherent())/ 100;
+	    	
+	    	sujet.setPrix_diminue(prix_diminue >= 0 ? prix_diminue : 0);
 	
 	    	userService.updateUser(current_user);
 	    	sujetService.updateService(sujet);

@@ -35,7 +35,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 @RequestMapping("/image")
 public class ImageSujetControler {
 	
-	 private static String UPLOAD_LOCATION="C:/Users/merye/git/ProjetAchatCollectiff/src/main/webapp/static/images/";
+	 private static String UPLOAD_LOCATION="C:/Users/youpi/git/ProjetAchatCollectif1/src/main/webapp/static/images/";
 	 
     @Autowired
     private FileUploadDAO fileUploadDao;

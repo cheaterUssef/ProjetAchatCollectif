@@ -1063,7 +1063,7 @@ $(document).ready(function() {
 											<div class="view-caption agileits-w3layouts">           
 												<h4><a href="products.html">${sujet.name}</a></h4>
 												<p>${sujet.description}</p>
-												<p>${sujet.nombre_adherent}</p>
+												<p>${sujet.nombre_adherent} / ${sujet.nombre_max_adherent}</p>
 												<h5>${sujet.prix_diminue}Dhs</h5> 
 <%-- 										<form action="#" method="post"> --%>
 													

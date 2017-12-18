@@ -99,14 +99,7 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
 							</sec:authorize>
 						</ul> 
 					</li> 
-					<li class="dropdown head-dpdn">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-percent" aria-hidden="true"></i> Today's Deals<span class="caret"></span></a>
-						<ul class="dropdown-menu">
-							<li><a href="offers.html">Cash Back Offers</a></li> 
-							<li><a href="offers.html">Product Discounts</a></li>
-							<li><a href="offers.html">Special Offers</a></li> 
-						</ul> 
-					</li> 
+					 
 					<sec:authorize access="hasRole('USER') or hasRole('ADMIN')"> 
 					<li class="dropdown head-dpdn">
 						<a href="<c:url value='/newsujet' />" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-gift" aria-hidden="true"></i> Add Article<span class="caret"></span></a>
@@ -118,15 +111,6 @@ SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, Sony
 					<a href=" <c:url value="/list" />" class="dropdown-toggle"><i class="fa fa-users" aria-hidden="true"></i> List Users</a>
 				 </li>
 				  </sec:authorize>
-					<li class="dropdown head-dpdn">
-						<a href="contact.html" class="dropdown-toggle"><i class="fa fa-map-marker" aria-hidden="true"></i> Store Finder</a>
-					</li> 
-					<li class="dropdown head-dpdn">
-						<a href="card.html" class="dropdown-toggle"><i class="fa fa-credit-card-alt" aria-hidden="true"></i> Credit Card</a>
-					</li> 
-					<li class="dropdown head-dpdn">
-						<a href="help.html" class="dropdown-toggle"><i class="fa fa-question-circle" aria-hidden="true"></i> Help</a>
-					</li>
 				</ul>
 			</div>
 			<div class="clearfix"> </div> 
